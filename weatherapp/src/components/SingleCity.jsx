@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { ArrowLeft } from 'react-bootstrap-icons';
 import NextDays from './NextDays';
+import GraphicWeather from './GraphicWeather';
 import './SingleCity.css';
 
 function SingleCity() {
@@ -62,6 +63,7 @@ function SingleCity() {
         </div>
 
         <NextDays cityId={weatherData.id} lat={weatherData.coord.lat} lon={weatherData.coord.lon} />
+        <GraphicWeather lat={weatherData.coord.lat} lon={weatherData.coord.lon} />
       </Container>
     </div>
   );

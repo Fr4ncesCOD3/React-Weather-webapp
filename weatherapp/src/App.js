@@ -5,6 +5,7 @@ import ModalCheck from './components/ModalCheck';
 import SearchCity from './components/SearchCity';
 import CityList from './components/CityList';
 import SingleCity from './components/SingleCity';
+import ErrorConnect from './components/ErrorConnect';
 import './App.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
     const savedCities = localStorage.getItem('cities');
     return savedCities ? JSON.parse(savedCities) : [];
   });
+  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
 
   useEffect(() => {
     // Controlla se è la prima visita e se ci sono dati salvati
@@ -29,6 +31,19 @@ function App() {
   useEffect(() => {
     localStorage.setItem('cities', JSON.stringify(cities));
   }, [cities]);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   const handleLocationAccept = () => {
     navigator.geolocation.getCurrentPosition(
@@ -68,6 +83,11 @@ function App() {
       return () => clearInterval(interval);
     }
   }, [userLocation]);
+
+  // Se l'utente è offline, mostra il componente ErrorConnect
+  if (!isOnline) {
+    return <ErrorConnect />;
+  }
 
   return (
     <Router>
